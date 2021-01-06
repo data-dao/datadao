@@ -24,9 +24,12 @@
   },
   "dependencies": {
     "@chainlink/contracts": "^0.0.10",
+    "@daostack/arc.js": "2.0.0-experimental.58",
+    "@dorgtech/daocreator-ui-experimental": "1.1.14",
     "@drizzle/react-components": "^1.5.3",
     "@drizzle/react-plugin": "^1.5.3",
     "@drizzle/store": "^1.5.3",
+    "@oceanprotocol/react": "^0.4.0",
     "@openzeppelin/contracts": "^3.2.0",
     "@redux-offline/redux-offline": "^2.6.0",
     "@sentry/browser": "^5.18.0",
@@ -57,6 +60,7 @@
     "redux-thunk": "^2.3.0",
     "reflect-metadata": "^0.1.13",
     "styled-components": "^5.1.1",
+    "web3modal": "^1.9.2",
     "xpring-js": "^5.0.1"
   },
   "devDependencies": {

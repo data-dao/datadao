@@ -20,11 +20,16 @@ import { ProgressBar } from './App.components/ProgressBar/ProgressBar.controller
 import { Toaster } from './App.components/Toaster/Toaster.controller'
 import { history } from './App.store'
 
+import { initializeArc } from '../helpers/arc'
+
 const options = { contracts: [TestContract] }
 // @ts-ignore
 const drizzleStore = generateStore(options)
 // @ts-ignore
 const drizzle = new Drizzle(options, drizzleStore)
+
+// Initialize DAOStack & Web3
+initializeArc()
 
 export const App = () => {
   return (

@@ -1,10 +1,13 @@
 import { Button } from 'app/App.components/Button/Button.controller'
 import { Input } from 'app/App.components/Input/Input.controller'
 import * as React from 'react'
-import { Link } from 'react-router-dom'
+import { deployDAO } from '../../helpers/datadao'
+import { enableWalletProvider, getCachedAccount, getWeb3Provider } from '../../helpers/arc'
 
 // prettier-ignore
 import { CreateStyled } from './Create.style'
+
+import ExampleDAO from '../../exampleDSDAO.json'
 
 export const CreateView = () => {
   const [title, setTitle] = React.useState<string>('')
@@ -47,9 +50,31 @@ export const CreateView = () => {
         inputStatus={undefined}
         errorMessage={undefined}
       />
-      <Link to="/congrats">
-        <Button text="Create" icon="home" />
-      </Link>
+      <Button text="Create" icon="home" onClick={async () => {
+        let success = false;
+        if (!getWeb3Provider()) {
+          console.log('Connecting to wallet...')
+          success = await enableWalletProvider({
+            showNotification: undefined,
+            suppressNotifyOnSuccess: true
+          });
+        }
+        if (success) {
+          const sender = getCachedAccount();
+          const dao = Object.assign(ExampleDAO, {
+            founders: [{
+                "address": sender,
+                "tokens": 0,
+                "reputation": 1000
+            },
+            ]
+          });
+          console.log('about to deployDAO', dao)
+          await deployDAO(dao)
+        } else {
+          alert('Fail to Connect to your wallet')
+        }
+      }}/>
     </CreateStyled>
   )
 }
