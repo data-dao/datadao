@@ -10,7 +10,7 @@ type LiquidityModalViewProps = {
   showing: boolean
   data?: DataDao
   hideCallback: () => void
-  buyCallback: (dataId: number, premium: number) => void
+  buyCallback: (dataId: string, premium: number) => void
 }
 
 export const LiquidityModalView = ({ showing, data, hideCallback, buyCallback }: LiquidityModalViewProps) => {
@@ -49,7 +49,7 @@ export const LiquidityModalView = ({ showing, data, hideCallback, buyCallback }:
                   Ξ{((parseFloat(premium) || 0) * ((data?.price || 0) / 100)).toFixed(2)}
                 </LiquidityModalRewardEther>
               </LiquidityModalReward>
-              <LiquidityModalBuy onClick={() => buyCallback(data?._id as number, premium)}>
+              <LiquidityModalBuy onClick={() => buyCallback(data?.id as string, premium)}>
                 Send Ξ{(parseFloat(premium) || 0).toFixed(2)}
               </LiquidityModalBuy>
             </LiquidityModalCard>

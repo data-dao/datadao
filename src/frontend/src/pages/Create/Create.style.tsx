@@ -3,7 +3,7 @@ import styled from 'styled-components/macro'
 export const CreateStyled = styled.div`
   width: 1080px;
   max-width: 90vw;
-  margin: 200px auto 0 auto;
+  margin: 100px auto 0 auto;
 
   button {
     display: block;

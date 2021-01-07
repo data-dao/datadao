@@ -2,14 +2,14 @@ import styled from 'styled-components/macro'
 import { backgroundColorLight } from 'styles'
 
 export const ParticipateStyled = styled.div`
-  width: 1080px;
+  width: 1280px;
   max-width: 90vw;
   margin: 100px auto 0 auto;
 `
 
 export const ParticipateColums = styled.div`
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 3fr;
   grid-gap: 30px;
 `
 
@@ -32,6 +32,10 @@ export const ParticipateMain = styled.div`
 
   button {
     margin-top: 20px;
+  }
+
+  input {
+    margin-top: 30px;
   }
 `
 

@@ -127,3 +127,31 @@ export const BrowseDataDescription = styled.div`
   color: #9090a0;
   margin: 20px auto;
 `
+
+export const BrowseDataProgress = styled.div`
+  > div:nth-child(1) {
+    color: #9090a0;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  > div:nth-child(2) {
+    float: right;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+`
+
+export const BrowseDataProgressBar = styled.div`
+  width: 100%;
+  height: 10px;
+  border-radius: 10px;
+  background: #0c1232;
+`
+
+export const BrowseDataProgressBarInner = styled.div<{ percent: number }>`
+  width: ${(props) => props.percent}%;
+  height: 10px;
+  border-radius: 10px;
+  background: linear-gradient(228.93deg, #fe7e00 8.82%, #ff3b00 86.18%);
+`

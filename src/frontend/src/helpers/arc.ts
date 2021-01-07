@@ -1,11 +1,11 @@
-import { RetryLink } from "apollo-link-retry";
 import { Address, Arc, Web3Provider } from '@daostack/arc.js';
+import { RetryLink } from "apollo-link-retry";
 import { first } from "rxjs/operators";
-import Web3Modal, { getProviderInfo, IProviderInfo } from 'web3modal'
 import Web3 from 'web3'
+import Web3Modal, { getProviderInfo, IProviderInfo } from 'web3modal'
 
-import { getNetworkId, getNetworkName, Networks, /*targetNetworks,*/ targetedNetwork } from './utils'
 import { settings } from '../config'
+import { getNetworkId, getNetworkName, Networks, targetedNetwork } from './utils'
 
 const MAX_BATCH_QUERY = 1000;
 const ACCOUNT_STORAGEKEY = "currentAddress";
@@ -83,6 +83,7 @@ async function _getCurrentAccountFromArc(arc?: Arc): Promise<string | undefined>
   if (!arc) {
     return undefined;
   }
+  //@ts-ignore
   return await arc.getAccount().pipe(first()).toPromise();
 }
 

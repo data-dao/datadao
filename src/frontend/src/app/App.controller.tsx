@@ -4,6 +4,7 @@ import { ConnectedRouter } from 'connected-react-router'
 import { Browse } from 'pages/Browse/Browse.controller'
 import { Congrats } from 'pages/Congrats/Congrats.controller'
 import { Create } from 'pages/Create/Create.controller'
+import { Details } from 'pages/Details/Details.controller'
 import { Error404 } from 'pages/Error404/Error404.controller'
 import { GetStarted } from 'pages/GetStarted/GetStarted.controller'
 import { Home } from 'pages/Home/Home.controller'
@@ -12,6 +13,7 @@ import * as React from 'react'
 import { Route, Switch } from 'react-router'
 
 import TestContract from '../contracts/TestContract.json'
+import { initializeArc } from '../helpers/arc'
 import { Drawer } from './App.components/Drawer/Drawer.controller'
 import { Hamburger } from './App.components/Hamburger/Hamburger.controller'
 import { Header } from './App.components/Header/Header.controller'
@@ -19,8 +21,6 @@ import { LiquidityModal } from './App.components/LiquidityModal/LiquidityModal.c
 import { ProgressBar } from './App.components/ProgressBar/ProgressBar.controller'
 import { Toaster } from './App.components/Toaster/Toaster.controller'
 import { history } from './App.store'
-
-import { initializeArc } from '../helpers/arc'
 
 const options = { contracts: [TestContract] }
 // @ts-ignore
@@ -60,7 +60,10 @@ export const App = () => {
                 <Route exact path="/browse">
                   <Browse />
                 </Route>
-                <Route exact path="/participate">
+                <Route exact path="/details/:id">
+                  <Details drizzle={drizzle} drizzleState={drizzleState} />
+                </Route>
+                <Route exact path="/participate/:id">
                   <Participate drizzle={drizzle} drizzleState={drizzleState} />
                 </Route>
                 <Route exact path="/congrats">

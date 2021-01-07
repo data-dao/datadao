@@ -5,14 +5,16 @@ import { DataDao, exampleDataDaos } from 'helpers/exampleDataDaos'
 // prettier-ignore
 import { ParticipateColums, ParticipateMain, ParticipateRequirement, ParticipateRows, ParticipateStyled } from './Participate.style'
 import { BrowseDataHeader, BrowseDataHeaderTitle, BrowseDataDescription } from 'pages/Browse/Browse.style'
+import { Input } from 'app/App.components/Input/Input.controller'
 
 type ParticipateViewProps = {
   drizzle: any
   drizzleState: any
+  dataDao: DataDao
 }
 
-export const ParticipateView = ({ drizzle, drizzleState }: ParticipateViewProps) => {
-  const dataDao = exampleDataDaos[0]
+export const ParticipateView = ({ drizzle, drizzleState, dataDao }: ParticipateViewProps) => {
+  const [dataUrl, setDataUrl] = React.useState<string>('')
 
   return (
     <ParticipateStyled>
@@ -32,30 +34,21 @@ export const ParticipateView = ({ drizzle, drizzleState }: ParticipateViewProps)
           </div>
         </ParticipateRows>
         <ParticipateMain>
-          <BrowseDataHeaderTitle>Steps</BrowseDataHeaderTitle>
-          <Button
-            text="1 - Upload Data (IPFS /. filecoin)"
-            onClick={() =>
-              drizzle.contracts.TestContract.methods.newStorage('0x1143C5F5298Ac520c20c110B400C05b13A60099a').send()
-            }
+          <BrowseDataHeaderTitle>Upload and publsh your data </BrowseDataHeaderTitle>
+          <Input
+            icon="ether"
+            name="dataurl"
+            placeholder="Data URL"
+            type="text"
+            onChange={(e) => setDataUrl(e.target.value)}
+            value={dataUrl}
+            onBlur={() => {}}
+            inputStatus={undefined}
+            errorMessage={undefined}
           />
           <Button
-            text="2 - Publish Data Asset"
-            onClick={() =>
-              drizzle.contracts.TestContract.methods.newStorage('0x1143C5F5298Ac520c20c110B400C05b13A60099a').send()
-            }
-          />
-          <Button
-            text="3 - Send DataToken to the DAO"
-            onClick={() =>
-              drizzle.contracts.TestContract.methods.newStorage('0x1143C5F5298Ac520c20c110B400C05b13A60099a').send()
-            }
-          />
-          <Button
-            text="4 - Redeem your stake"
-            onClick={() =>
-              drizzle.contracts.TestContract.methods.newStorage('0x1143C5F5298Ac520c20c110B400C05b13A60099a').send()
-            }
+            text="Publish data asset and send data token to the DAO"
+            onClick={() => drizzle.contracts.TestContract.methods.newStorage(dataUrl).send()}
           />
         </ParticipateMain>
       </ParticipateColums>

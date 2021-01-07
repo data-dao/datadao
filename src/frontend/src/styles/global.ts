@@ -30,9 +30,9 @@ h1 {
 }
 
 h2 {
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0;
+  margin-top: 30px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 input {

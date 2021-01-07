@@ -20,19 +20,10 @@ export const LiquidityModal = ({ drizzle, drizzleState }: LiquidityModalProps) =
     dispatch(hideLiquidity())
   }
 
-  const data: DataDao = exampleDataDaos.filter((dataContract) => dataContract._id === dataId)?.[0]
+  const data: DataDao = exampleDataDaos[0]
 
-  const buyCallback = (dataId: number, premium: number) => {
+  const buyCallback = (dataId: string, premium: number) => {
     console.log(dataId, premium)
-    console.log(drizzle.contracts)
-    if (dataId === 0)
-      drizzle.contracts.DataShipping.methods
-        .provideLiquidity()
-        .send({ value: web3.utils.toWei(premium as any, 'ether') })
-    if (dataId === 1)
-      drizzle.contracts.DataLife.methods.provideLiquidity().send({ value: web3.utils.toWei(premium as any, 'ether') })
-    if (dataId === 2)
-      drizzle.contracts.DataFlight.methods.provideLiquidity().send({ value: web3.utils.toWei(premium as any, 'ether') })
   }
 
   return <LiquidityModalView showing={showing} data={data} hideCallback={hideCallback} buyCallback={buyCallback} />
