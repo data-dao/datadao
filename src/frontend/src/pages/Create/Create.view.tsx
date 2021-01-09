@@ -1,13 +1,13 @@
 import { Button } from 'app/App.components/Button/Button.controller'
+import { FilecoinUploader } from 'app/App.components/FilecoinUploader/FilecoinUploader.controller'
 import { Input } from 'app/App.components/Input/Input.controller'
 import * as React from 'react'
-import { deployDAO } from '../../helpers/datadao'
-import { enableWalletProvider, getCachedAccount, getWeb3Provider } from '../../helpers/arc'
-
-// prettier-ignore
-import { CreateStyled } from './Create.style'
 
 import ExampleDAO from '../../exampleDSDAO.json'
+import { enableWalletProvider, getCachedAccount, getWeb3Provider } from '../../helpers/arc'
+import { deployDAO } from '../../helpers/datadao'
+// prettier-ignore
+import { CreateStyled } from './Create.style'
 
 export const CreateView = () => {
   const [title, setTitle] = React.useState<string>('')
@@ -81,6 +81,9 @@ export const CreateView = () => {
         inputStatus={undefined}
         errorMessage={undefined}
       />
+
+      <h2>Sample data</h2>
+      <FilecoinUploader callback={(url: string) => setExampleDataUrl(url)} />
       <Input
         icon="ether"
         name="exampleDataUrl"

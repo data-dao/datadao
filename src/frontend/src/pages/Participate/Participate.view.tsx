@@ -1,11 +1,12 @@
 import { Button } from 'app/App.components/Button/Button.controller'
-import * as React from 'react'
+import { FilecoinUploader } from 'app/App.components/FilecoinUploader/FilecoinUploader.controller'
+import { Input } from 'app/App.components/Input/Input.controller'
 import { DataDao, exampleDataDaos } from 'helpers/exampleDataDaos'
+import { BrowseDataDescription, BrowseDataHeader, BrowseDataHeaderTitle } from 'pages/Browse/Browse.style'
+import * as React from 'react'
 
 // prettier-ignore
 import { ParticipateColums, ParticipateMain, ParticipateRequirement, ParticipateRows, ParticipateStyled } from './Participate.style'
-import { BrowseDataHeader, BrowseDataHeaderTitle, BrowseDataDescription } from 'pages/Browse/Browse.style'
-import { Input } from 'app/App.components/Input/Input.controller'
 
 type ParticipateViewProps = {
   drizzle: any
@@ -35,6 +36,7 @@ export const ParticipateView = ({ drizzle, drizzleState, dataDao }: ParticipateV
         </ParticipateRows>
         <ParticipateMain>
           <BrowseDataHeaderTitle>Upload and publsh your data </BrowseDataHeaderTitle>
+          <FilecoinUploader callback={(url: string) => setDataUrl(url)} />
           <Input
             icon="ether"
             name="dataurl"

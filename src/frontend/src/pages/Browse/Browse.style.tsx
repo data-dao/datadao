@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro'
-import { FullPage, primaryColor, subTextColor, textColor, backgroundColorLight } from 'styles'
+import { backgroundColorLight, FullPage, primaryColor, subTextColor, textColor } from 'styles'
 
 export const BrowseStyled = styled(FullPage)``
 
@@ -74,6 +74,7 @@ export const BrowseDataHeader = styled.div`
 
 export const BrowseDataHeaderTitle = styled.div`
   margin-top: 11px;
+  margin-bottom: 20px;
   font-size: 18px;
   font-weight: bold;
 `
