@@ -1,14 +1,12 @@
 import { connectRouter } from 'connected-react-router'
 import { combineReducers } from 'redux'
 
-
+import { daos, DaosState } from './daos'
 import { drawer, DrawerState } from './drawer'
+import { liquidityModal, LiquidityModalState } from './liquidityModal'
 import { loading, LoadingState } from './loading'
 import { progressBar, ProgressBarState } from './progressBar'
-
 import { toaster, ToasterState } from './toaster'
-
-import { liquidityModal, LiquidityModalState } from './liquidityModal'
 
 export const reducers = (history: any) =>
   combineReducers({
@@ -18,6 +16,7 @@ export const reducers = (history: any) =>
     drawer,
     progressBar,
     liquidityModal,
+    daos,
   })
 
 export interface State {
@@ -27,5 +26,6 @@ export interface State {
   progressBar: ProgressBarState
   serviceWorker: ServiceWorkerState
   liquidityModal: LiquidityModalState
+  daos: DaosState
 
 }

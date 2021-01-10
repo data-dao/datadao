@@ -1,17 +1,10 @@
+import { DAOMigrationCallbacks, DAOMigrationResult, getNetworkName, getWeb3, migrateDAO } from "@dorgtech/daocreator-lib-experimental"
 import axios from 'axios'
-import {
-    DAOMigrationResult,
-    getWeb3,
-    DAOMigrationCallbacks,
-    migrateDAO,
-    getNetworkName,
-//   } from "@dorgtech/daocreator-lib";
-  } from "@dorgtech/daocreator-lib-experimental" // comment in Arc1
+// comment in Arc1
 import Notify from "bnc-notify"
+import { HTTP_PROVIDER, NOTIFY_API_KEY } from 'config'
 import ipfsClient from 'ipfs-http-client'
 import Web3 from "web3"
-
-import { HTTP_PROVIDER, NOTIFY_API_KEY } from 'config'
 
 const notify = Notify({
     dappId: NOTIFY_API_KEY,

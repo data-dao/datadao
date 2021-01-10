@@ -1,6 +1,7 @@
 import { DrizzleContext } from '@drizzle/react-plugin'
 import { Drizzle, generateStore } from '@drizzle/store'
 import { ConnectedRouter } from 'connected-react-router'
+import drizzleOpts from 'drizzleOptions'
 import { Browse } from 'pages/Browse/Browse.controller'
 import { Congrats } from 'pages/Congrats/Congrats.controller'
 import { Create } from 'pages/Create/Create.controller'
@@ -20,7 +21,6 @@ import { LiquidityModal } from './App.components/LiquidityModal/LiquidityModal.c
 import { ProgressBar } from './App.components/ProgressBar/ProgressBar.controller'
 import { Toaster } from './App.components/Toaster/Toaster.controller'
 import { history } from './App.store'
-import drizzleOpts from 'drizzleOptions'
 
 // @ts-ignore
 const drizzleStore = generateStore(drizzleOpts)
@@ -47,16 +47,16 @@ export const App = () => {
               <Drawer />
               <Hamburger />
               <Switch>
-                <Route exact path="/">
+                {/* <Route exact path="/">
                   <Home />
-                </Route>
+                </Route> */}
                 <Route exact path="/get-started">
                   <GetStarted />
                 </Route>
                 <Route exact path="/create">
-                  <Create drizzle={drizzle} drizzleState={drizzleState}/>
+                  <Create drizzle={drizzle} drizzleState={drizzleState} />
                 </Route>
-                <Route exact path="/browse">
+                <Route exact path="/">
                   <Browse />
                 </Route>
                 <Route exact path="/details/:id">

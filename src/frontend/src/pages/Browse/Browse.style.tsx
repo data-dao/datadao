@@ -1,7 +1,11 @@
 import styled from 'styled-components/macro'
 import { backgroundColorLight, FullPage, primaryColor, subTextColor, textColor } from 'styles'
 
-export const BrowseStyled = styled(FullPage)``
+export const BrowseStyled = styled(FullPage)`
+  > h1 {
+    margin: 20px 0 0 0;
+  }
+`
 
 export const BrowseDatas = styled.div`
   margin: 0 auto;
@@ -15,7 +19,6 @@ export const BrowseData = styled.div`
   cursor: pointer;
   background-color: ${backgroundColorLight};
   border-radius: 10px;
-  height: 220px;
   padding: 25px;
 
   transition: transform 0.2s;

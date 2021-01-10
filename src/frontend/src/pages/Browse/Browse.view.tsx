@@ -1,10 +1,11 @@
 import { Button } from 'app/App.components/Button/Button.controller'
+import { fetchDataDaos, MasterDataTokenMeta } from 'helpers/datadao'
 import { DataDao, exampleDataDaos } from 'helpers/exampleDataDaos'
 import * as React from 'react'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Web3 from 'web3'
-
-import { fetchDataDaos, MasterDataTokenMeta } from 'helpers/datadao'
+import { updateDaos } from './Browse.actions'
 
 // prettier-ignore
 import { BrowseData, BrowseDataDescription, BrowseDataHeader, BrowseDataHeaderTitle, BrowseDataProgress, BrowseDataProgressBar, BrowseDataProgressBarInner, BrowseDatas, BrowseStyled } from './Browse.style'
@@ -17,13 +18,17 @@ type BrowseViewProps = {
 const zeroX: string = '0x' + '0'.repeat(40)
 
 export const BrowseView = ({ drizzle }: BrowseViewProps) => {
+  const [dataDAOS, listDataDAOS] = React.useState<Array<MasterDataTokenMeta>>([])
 
-  const [dataDAOS, listDataDAOS] = React.useState<Array<MasterDataTokenMeta>>([]);
-  
+  const dispatch = useDispatch()
+
   React.useEffect(() => {
-    fetchDataDaos(drizzle).then((daos: Array<MasterDataTokenMeta>) => listDataDAOS(daos))
+    fetchDataDaos(drizzle).then((daos: Array<MasterDataTokenMeta>) => {
+      listDataDAOS(daos)
+      dispatch(updateDaos(daos))
+    })
   }, [drizzle])
-  
+
   return (
     <BrowseStyled>
       <h1>Data Marketplace</h1>
@@ -31,6 +36,7 @@ export const BrowseView = ({ drizzle }: BrowseViewProps) => {
         <Button text="Create new Data DAO and request data" />
       </Link>
 
+      <h2>DEMO DAOs</h2>
       <BrowseDatas>
         {exampleDataDaos.map((dataDao: DataDao) => (
           <Link to={`/details/${dataDao.id}`}>
@@ -50,24 +56,30 @@ export const BrowseView = ({ drizzle }: BrowseViewProps) => {
             </BrowseData>
           </Link>
         ))}
-        {dataDAOS.filter((dataDao: MasterDataTokenMeta) => dataDao.daoAddress != zeroX).map((dataDao: MasterDataTokenMeta) => (
-          <Link to={`/details/${dataDao.daoAddress}`}>
-            <BrowseData key={dataDao.daoAddress}>
-              <BrowseDataHeader>
-                <img alt={'life'} src={`/images/life.png`} />
-                <BrowseDataHeaderTitle>{dataDao.metadata!.title}</BrowseDataHeaderTitle>
-              </BrowseDataHeader>
-              <BrowseDataDescription>{dataDao.metadata!.description}</BrowseDataDescription>
-              <BrowseDataProgress>
-                <div>Completion</div>
-                <div>{(0) * 100}%</div>
-                <BrowseDataProgressBar>
-                  <BrowseDataProgressBarInner percent={(0) * 100} />
-                </BrowseDataProgressBar>
-              </BrowseDataProgress>
-            </BrowseData>
-          </Link>
-        ))}
+      </BrowseDatas>
+
+      <h2>REAL DAOs</h2>
+      <BrowseDatas>
+        {dataDAOS
+          .filter((dataDao: MasterDataTokenMeta) => dataDao.daoAddress != zeroX)
+          .map((dataDao: MasterDataTokenMeta) => (
+            <Link to={`/details/${dataDao.daoAddress}`}>
+              <BrowseData key={dataDao.daoAddress}>
+                <BrowseDataHeader>
+                  <img alt={'life'} src={`/images/life.png`} />
+                  <BrowseDataHeaderTitle>{dataDao.metadata!.title}</BrowseDataHeaderTitle>
+                </BrowseDataHeader>
+                <BrowseDataDescription>{dataDao.metadata!.description}</BrowseDataDescription>
+                <BrowseDataProgress>
+                  <div>Completion</div>
+                  <div>{0 * 100}%</div>
+                  <BrowseDataProgressBar>
+                    <BrowseDataProgressBarInner percent={0 * 100} />
+                  </BrowseDataProgressBar>
+                </BrowseDataProgress>
+              </BrowseData>
+            </Link>
+          ))}
       </BrowseDatas>
     </BrowseStyled>
   )

@@ -16,17 +16,17 @@ export const DrawerView = ({ showing, hideCallback, pathname }: DrawerViewProps)
     <DrawerStyled className={`${showing}`}>
       <h1>Menu</h1>
 
-      <DrawerItem isSelected={pathname === '/'}>
-        <Link to="/" onClick={() => hideCallback()}>
+      <DrawerItem isSelected={pathname === '/home'}>
+        <a href="https://datadao.co" target="_blank">
           <svg>
             <use xlinkHref="/icons/sprites.svg#home" />
           </svg>
           Home
-        </Link>
+        </a>
       </DrawerItem>
 
-      <DrawerItem isSelected={pathname === '/browse'}>
-        <Link to="/browse" onClick={() => hideCallback()}>
+      <DrawerItem isSelected={pathname === '/'}>
+        <Link to="/" onClick={() => hideCallback()}>
           <svg>
             <use xlinkHref="/icons/sprites.svg#buy" />
           </svg>

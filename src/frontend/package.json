@@ -25,6 +25,7 @@
   "dependencies": {
     "@chainlink/contracts": "^0.0.10",
     "@daostack/arc.js": "2.0.0-experimental.58",
+    "@dorgtech/daocreator-lib-experimental": "^1.1.12",
     "@dorgtech/daocreator-ui-experimental": "1.1.14",
     "@drizzle/react-components": "^1.5.3",
     "@drizzle/react-plugin": "^1.5.3",

@@ -27,12 +27,14 @@ h1 {
   font-weight: 700;
   display: inline-block;
   margin: 20px 0px;
+  color: ${textColor} !important;
 }
 
 h2 {
   margin-top: 30px;
   font-size: 18px;
   font-weight: bold;
+  color: ${textColor} !important;
 }
 
 input {
@@ -154,4 +156,13 @@ select:-webkit-autofill:focus {
   visibility: hidden;
 }
 
+.ant-result-title {
+  color: white !important;
+}
+
+.ant-result-subtitle {
+  color: white !important;
+}
+
 `
+
