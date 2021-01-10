@@ -12,7 +12,6 @@ import { Participate } from 'pages/Participate/Participate.controller'
 import * as React from 'react'
 import { Route, Switch } from 'react-router'
 
-import TestContract from '../contracts/TestContract.json'
 import { initializeArc } from '../helpers/arc'
 import { Drawer } from './App.components/Drawer/Drawer.controller'
 import { Hamburger } from './App.components/Hamburger/Hamburger.controller'
@@ -21,12 +20,12 @@ import { LiquidityModal } from './App.components/LiquidityModal/LiquidityModal.c
 import { ProgressBar } from './App.components/ProgressBar/ProgressBar.controller'
 import { Toaster } from './App.components/Toaster/Toaster.controller'
 import { history } from './App.store'
+import drizzleOpts from 'drizzleOptions'
 
-const options = { contracts: [TestContract] }
 // @ts-ignore
-const drizzleStore = generateStore(options)
+const drizzleStore = generateStore(drizzleOpts)
 // @ts-ignore
-const drizzle = new Drizzle(options, drizzleStore)
+const drizzle = new Drizzle(drizzleOpts, drizzleStore)
 
 // Initialize DAOStack & Web3
 initializeArc()
@@ -55,7 +54,7 @@ export const App = () => {
                   <GetStarted />
                 </Route>
                 <Route exact path="/create">
-                  <Create />
+                  <Create drizzle={drizzle} drizzleState={drizzleState}/>
                 </Route>
                 <Route exact path="/browse">
                   <Browse />

@@ -9,6 +9,7 @@ import { unregister } from './serviceWorker'
 import { GlobalStyle } from './styles'
 
 import './styles/fonts.css'
+import './styles/index.css'
 
 export const store = configureStore({})
 

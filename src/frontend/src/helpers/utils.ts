@@ -1,7 +1,6 @@
 import { promisify } from "util";
 import {
-    Arc,
-    Web3Provider
+    Arc
   } from "@daostack/arc.js";
 import { JsonRpcProvider } from "ethers/providers";
 import { Signer } from "ethers";

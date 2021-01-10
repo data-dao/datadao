@@ -1,4 +1,4 @@
-import { Address, Arc, Web3Provider } from '@daostack/arc.js';
+import { Address, Arc, Web3Provider } from '@daostack/arc.js'; // comment Web3Provider in Arc1
 import { RetryLink } from "apollo-link-retry";
 import { first } from "rxjs/operators";
 import Web3 from 'web3'
@@ -60,7 +60,8 @@ export function getWeb3ProviderInfo(provider?: any): IWeb3ProviderInfo | null {
 /**
  * Return currently-selected and fully-enabled web3Provider (an account can be presumed to exist).
  */
-export function getWeb3Provider(): Web3Provider | undefined {
+export function getWeb3Provider(): Web3Provider | undefined { // comment in Arc1
+  // export function getWeb3Provider(): any | undefined {
   return selectedProvider;
 }
 
@@ -73,6 +74,18 @@ export function getArcSettings(): any {
   console.log('network', network)
   const arcSettings = settings[network];
   return arcSettings;
+}
+
+/**
+ * Return the default account in current use by Arc1.
+ */
+async function _getCurrentAccountFromProvider(web3?: any): Promise<string | undefined> {
+  const network = targetedNetwork();
+  if (!web3) {
+    return undefined;
+  }
+  const accounts = await web3.eth.getAccounts();
+  return accounts[0] ? accounts[0].toLowerCase() : null;
 }
 
 /**
@@ -131,8 +144,8 @@ async function enableWeb3Provider(): Promise<void> {
       return;
     }
   
-    // let provider: any;
-    let provider: Web3Provider | undefined = undefined;
+    let provider: Web3Provider | undefined = undefined; // comment in Arc1
+    // let provider: any = undefined;
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     let _web3Modal: Web3ConnectModal;
@@ -364,7 +377,8 @@ export async function enableWalletProvider(options: IEnableWalletProviderParams)
     arcSettings.retryLink = retryLink;
 
     if (arc) {
-      arc.setWeb3(provider);
+      arc.setWeb3(provider); // comment in Arc1
+      // arc.web3 = new Web3(provider);
     } else {
       arc = new Arc(arcSettings);
     }
@@ -380,9 +394,11 @@ export async function enableWalletProvider(options: IEnableWalletProviderParams)
     }
 
     success = !!contractInfos;
+    console.log('success?', success)
 
     if (success) {
-      const account = await _getCurrentAccountFromArc(arc);
+      const account = await _getCurrentAccountFromArc(arc); // comment in Arc1
+      // const account = await _getCurrentAccountFromProvider(arc.web3)
       console.log('account', account)
 
       if (!account || account === "0x0000000000000000000000000000000000000000") {
@@ -395,12 +411,20 @@ export async function enableWalletProvider(options: IEnableWalletProviderParams)
     }
 
     if (success) {
+      /* Arc1
+      provider = arc.web3.currentProvider; // won't be a string, but the actual provider
+      // save for future reference
+      // eslint-disable-next-line require-atomic-updates
+      provider.__networkId = await getNetworkId(provider);
+      */
       if ((window as any).ethereum) {
         // if this is metamask this should prevent a browser refresh when the network changes
         (window as any).ethereum.autoRefreshOnNetworkChange = false;
       }
-      const network = await arc.web3!.getNetwork();
-      const networkName = await getNetworkName(network.chainId.toString());
+
+      const network = await arc.web3!.getNetwork(); // comment in Arc1
+      const networkName = await getNetworkName(network.chainId.toString()); // comment in Arc1
+      // const networkName = await getNetworkName(provider.__networkId);
       // eslint-disable-next-line no-console
       console.log(`Connected Arc to ${networkName}${readonly ? " (readonly)" : ""} `);
     }

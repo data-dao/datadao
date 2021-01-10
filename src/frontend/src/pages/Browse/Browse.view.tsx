@@ -2,6 +2,9 @@ import { Button } from 'app/App.components/Button/Button.controller'
 import { DataDao, exampleDataDaos } from 'helpers/exampleDataDaos'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+import Web3 from 'web3'
+
+import { fetchDataDaos, MasterDataTokenMeta } from 'helpers/datadao'
 
 // prettier-ignore
 import { BrowseData, BrowseDataDescription, BrowseDataHeader, BrowseDataHeaderTitle, BrowseDataProgress, BrowseDataProgressBar, BrowseDataProgressBarInner, BrowseDatas, BrowseStyled } from './Browse.style'
@@ -11,7 +14,16 @@ type BrowseViewProps = {
   drizzleState: any
 }
 
+const zeroX: string = '0x' + '0'.repeat(40)
+
 export const BrowseView = ({ drizzle }: BrowseViewProps) => {
+
+  const [dataDAOS, listDataDAOS] = React.useState<Array<MasterDataTokenMeta>>([]);
+  
+  React.useEffect(() => {
+    fetchDataDaos(drizzle).then((daos: Array<MasterDataTokenMeta>) => listDataDAOS(daos))
+  }, [drizzle])
+  
   return (
     <BrowseStyled>
       <h1>Data Marketplace</h1>
@@ -33,6 +45,24 @@ export const BrowseView = ({ drizzle }: BrowseViewProps) => {
                 <div>{(dataDao.amountSoFar / dataDao.amountNeeded) * 100}%</div>
                 <BrowseDataProgressBar>
                   <BrowseDataProgressBarInner percent={(dataDao.amountSoFar / dataDao.amountNeeded) * 100} />
+                </BrowseDataProgressBar>
+              </BrowseDataProgress>
+            </BrowseData>
+          </Link>
+        ))}
+        {dataDAOS.filter((dataDao: MasterDataTokenMeta) => dataDao.daoAddress != zeroX).map((dataDao: MasterDataTokenMeta) => (
+          <Link to={`/details/${dataDao.daoAddress}`}>
+            <BrowseData key={dataDao.daoAddress}>
+              <BrowseDataHeader>
+                <img alt={'life'} src={`/images/life.png`} />
+                <BrowseDataHeaderTitle>{dataDao.metadata!.title}</BrowseDataHeaderTitle>
+              </BrowseDataHeader>
+              <BrowseDataDescription>{dataDao.metadata!.description}</BrowseDataDescription>
+              <BrowseDataProgress>
+                <div>Completion</div>
+                <div>{(0) * 100}%</div>
+                <BrowseDataProgressBar>
+                  <BrowseDataProgressBarInner percent={(0) * 100} />
                 </BrowseDataProgressBar>
               </BrowseDataProgress>
             </BrowseData>
