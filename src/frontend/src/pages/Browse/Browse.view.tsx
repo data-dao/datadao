@@ -71,13 +71,6 @@ export const BrowseView = ({ drizzle }: BrowseViewProps) => {
                   <BrowseDataHeaderTitle>{dataDao.metadata!.title}</BrowseDataHeaderTitle>
                 </BrowseDataHeader>
                 <BrowseDataDescription>{dataDao.metadata!.description}</BrowseDataDescription>
-                <BrowseDataProgress>
-                  <div>Completion</div>
-                  <div>{0 * 100}%</div>
-                  <BrowseDataProgressBar>
-                    <BrowseDataProgressBarInner percent={0 * 100} />
-                  </BrowseDataProgressBar>
-                </BrowseDataProgress>
               </BrowseData>
             </Link>
           ))}

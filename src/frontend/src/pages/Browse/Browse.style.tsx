@@ -133,6 +133,8 @@ export const BrowseDataDescription = styled.div`
 `
 
 export const BrowseDataProgress = styled.div`
+  margin-top: 40px;
+
   > div:nth-child(1) {
     color: #9090a0;
     display: inline-block;

@@ -1,6 +1,7 @@
 import { Button } from 'app/App.components/Button/Button.controller'
-import { DAOMetadata, MasterDataTokenMeta } from 'helpers/datadao'
-import { BrowseDataDescription, BrowseDataHeader, BrowseDataHeaderTitle } from 'pages/Browse/Browse.style'
+import { ContributionMeta, DAOMetadata, MasterDataTokenMeta } from 'helpers/datadao'
+// prettier-ignore
+import { BrowseDataDescription, BrowseDataHeader, BrowseDataHeaderTitle, BrowseDataProgress, BrowseDataProgressBar, BrowseDataProgressBarInner } from 'pages/Browse/Browse.style'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -11,9 +12,14 @@ type DetailsViewProps = {
   drizzle: any
   drizzleState: any
   dataDao: MasterDataTokenMeta
+  contributions: ContributionMeta[]
+  myAddress?: string
 }
 
-export const DetailsView = ({ drizzle, drizzleState, dataDao }: DetailsViewProps) => {
+export const DetailsView = ({ drizzle, drizzleState, dataDao, contributions, myAddress }: DetailsViewProps) => {
+  const recordsNumber = contributions.map((contrib) => parseInt(contrib.records)).reduce((a, b) => a + b, 0)
+  const recordsNeeded = dataDao?.metadata?.requirements?.records ? dataDao?.metadata?.requirements?.records : 1
+
   return (
     <DetailsStyled>
       <DetailsHeader>
@@ -34,7 +40,7 @@ export const DetailsView = ({ drizzle, drizzleState, dataDao }: DetailsViewProps
             onClick={() =>
               drizzle.contracts.TestContract.methods.newStorage('0x1143C5F5298Ac520c20c110B400C05b13A60099a').send()
             }
-            text="Buy dataset Ξ 1093.23"
+            text={`Buy dataset DAI ${parseInt(dataDao?.metadata?.purchasePrice as any | 0) / 1000000000000000000}`}
           />
         </Link>
       </DetailsHeader>
@@ -58,20 +64,34 @@ export const DetailsView = ({ drizzle, drizzleState, dataDao }: DetailsViewProps
         <DetailsMain>
           <BrowseDataHeaderTitle>Infos</BrowseDataHeaderTitle>
           <div>Number of data records already been contributed</div>
-          <div>0</div>
+          <div>{recordsNumber}</div>
           <div>Number of DataDAO members</div>
-          <div>0</div>
+          <div>{[...new Set(contributions.map((contrib) => contrib.contributor))].length}</div>
           <div>Total DataPool token Minted</div>
-          <div>0</div>
+          <div>{contributions.length}</div>
           <div>Your stake</div>
-          <div>0</div>
+          <div>{contributions.filter((contrib) => contrib.contributor === myAddress).length}</div>
         </DetailsMain>
 
         <DetailsLinks>
           <BrowseDataHeaderTitle>Links</BrowseDataHeaderTitle>
-          <a href={undefined}>Governance dashboard</a>
-          <a href={undefined}>DAO address</a>
-          <a href={undefined}>DataPool Contract</a>
+          <a href={`https://alchemy-2-rinkeby.herokuapp.com/dao/${dataDao.daoAddress.toLowerCase()}`} target="_blank">
+            Governance dashboard
+          </a>
+          <a href={`https://rinkeby.etherscan.io/address/${dataDao.daoAddress}`} target="_blank">
+            DAO address
+          </a>
+          <a href={undefined} target="_blank">
+            DataPool Contract (Coming soon)
+          </a>
+
+          <BrowseDataProgress>
+            <div>Completion</div>
+            <div>{`${recordsNumber}/${recordsNeeded} (${(recordsNumber / recordsNeeded) * 100}%)`}</div>
+            <BrowseDataProgressBar>
+              <BrowseDataProgressBarInner percent={(recordsNumber / recordsNeeded) * 100} />
+            </BrowseDataProgressBar>
+          </BrowseDataProgress>
         </DetailsLinks>
       </DetailsColums>
     </DetailsStyled>

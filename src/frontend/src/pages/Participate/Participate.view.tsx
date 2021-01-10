@@ -1,21 +1,28 @@
-import { Spin } from 'antd';
+import { Spin } from 'antd'
 import { Button } from 'app/App.components/Button/Button.controller'
-import { IFile, FilecoinUploader } from 'app/App.components/FilecoinUploader/FilecoinUploader.controller'
+import { FilecoinUploader, IFile } from 'app/App.components/FilecoinUploader/FilecoinUploader.controller'
 import { Input } from 'app/App.components/Input/Input.controller'
 import { MasterDataTokenMeta } from 'helpers/datadao'
+import { DataTokenOpts } from 'helpers/datadao'
 import { BrowseDataDescription, BrowseDataHeader, BrowseDataHeaderTitle } from 'pages/Browse/Browse.style'
 import * as React from 'react'
 
-import { DataTokenOpts  } from 'helpers/datadao'
-
 // prettier-ignore
-import { ParticipateColums, ParticipateMain, ParticipateRequirement, ParticipateRows, ParticipateStyled, ParticipatePublishing } from './Participate.style'
+import { ParticipateColums, ParticipateMain, ParticipatePublishing, ParticipateRequirement, ParticipateRows, ParticipateStyled } from './Participate.style'
 
 type ParticipateViewProps = {
   // drizzle: any
   // drizzleState: any
   dataDao: MasterDataTokenMeta
-  publishAsset: (datasetName: string, authorName: string, license: string, dataURI: string, file: IFile, totalRecords: string, dataTokenOpts: DataTokenOpts) => void
+  publishAsset: (
+    datasetName: string,
+    authorName: string,
+    license: string,
+    dataURI: string,
+    file: IFile,
+    totalRecords: string,
+    dataTokenOpts: DataTokenOpts,
+  ) => void
   isPublishing?: boolean
   processingMsg?: string
 }
@@ -31,7 +38,7 @@ export const ParticipateView = ({ dataDao, publishAsset, isPublishing, processin
   const [file, setFile] = React.useState<IFile>()
   const [totalRecords, setTotalRecords] = React.useState<string>('')
 
-  const dataTokenOpts = {}  // TODO: set token params
+  const dataTokenOpts = {} // TODO: set token params
 
   return (
     <ParticipateStyled>
@@ -52,7 +59,7 @@ export const ParticipateView = ({ dataDao, publishAsset, isPublishing, processin
           </div>
         </ParticipateRows>
         <ParticipateMain>
-          <BrowseDataHeaderTitle>Upload and publsh your data </BrowseDataHeaderTitle>
+          <BrowseDataHeaderTitle>Upload and publish your data</BrowseDataHeaderTitle>
           <Input
             icon="ether"
             name="datasetName"
@@ -75,10 +82,12 @@ export const ParticipateView = ({ dataDao, publishAsset, isPublishing, processin
             inputStatus={undefined}
             errorMessage={undefined}
           />
-          <FilecoinUploader callback={(url: string, _file: IFile) => {
-            setDataUrl(url)
-            setFile(_file)
-          }} />
+          <FilecoinUploader
+            callback={(url: string, _file: IFile) => {
+              setDataUrl(url)
+              setFile(_file)
+            }}
+          />
           <Input
             icon="ether"
             name="dataurl"
