@@ -7,7 +7,8 @@ import "../erc998/ComposableToken.sol";
 import "../interfaces/ocean/IERC20Template.sol";
 import "../interfaces/IMasterDataToken.sol";
 
-contract MasterDataToken is IMasterDataToken, ComposableToken {
+// contract MasterDataToken is IMasterDataToken, ComposableToken {
+    contract MasterDataToken is ERC721, IMasterDataToken {
 
     using SafeMath for uint256;
 
@@ -36,7 +37,8 @@ contract MasterDataToken is IMasterDataToken, ComposableToken {
                 string memory symbol,
                 string memory ipfsMetadata,
                 uint256 minDataTokenAllowance,
-                address daoAddress) ComposableToken(name, symbol, "") public {
+                // address daoAddress) ComposableToken(name, symbol, "") public {
+                address daoAddress) ERC721(name, symbol) public {
 
         _initialize(name, symbol, ipfsMetadata, minDataTokenAllowance, daoAddress);
 
@@ -69,7 +71,7 @@ contract MasterDataToken is IMasterDataToken, ComposableToken {
         _minDatatokenAllowance = minDatatokenAllowance;
         _setBaseURI(ipfsMetadata);
         _initialized = true;
-
+        return _initialized;
     }
 
     function contribute(address _datatoken, uint256 _records) external override returns (bool) {

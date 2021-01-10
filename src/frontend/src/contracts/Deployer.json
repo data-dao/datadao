@@ -1251,7 +1251,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.4",
-  "updatedAt": "2021-01-09T16:07:29.755Z",
+  "updatedAt": "2021-01-09T16:17:00.139Z",
   "devdoc": {
     "author": "@dev Contract Deployer      Based on ERC1167      This contract allowes factory contract      to deploy new contract instances using      the same library pattern in solidity.      the logic it self is deployed only once, but      executed in the context of the new storage      contract (new contract instance)",
     "kind": "dev",

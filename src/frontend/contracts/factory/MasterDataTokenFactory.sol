@@ -27,6 +27,8 @@ contract MasterDataTokenFactory is Context, Deployer {
 
     uint256 private dataTokenCount = 1;
 
+    mapping(address => address) private daoToToken;
+
     event MasterDataTokenCreated(address indexed tokenAddress,
                                  address indexed owner,
                                  address indexed daoAddress,
@@ -66,6 +68,10 @@ contract MasterDataTokenFactory is Context, Deployer {
             _daoAddress
         ), "MasterDataTokenFactory: Failed to initialize a new MasterDataToken instance");
 
+        if (_daoAddress != address(0)) {
+            daoToToken[_daoAddress] = dataToken;
+        }
+
         emit MasterDataTokenCreated(
             dataToken,
             owner,
@@ -76,6 +82,10 @@ contract MasterDataTokenFactory is Context, Deployer {
 
         dataTokenCount.add(1);
         return dataToken;
+    }
+
+    function dataDaoToken(address daoAddress) external view returns (address) {
+        return daoToToken[daoAddress];
     }
 
 }
