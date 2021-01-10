@@ -32,4 +32,5 @@ interface IERC20Template {
     function transfer(address to, uint256 value) external returns (bool);
     function proposeMinter(address newMinter) external;
     function approveMinter() external;
+    function approve(address spender, uint256 amount) external returns (bool);
 }
