@@ -434,6 +434,7 @@ export async function enableWalletProvider(options: IEnableWalletProviderParams)
   }
 
   (window as any).arc = success ? arc : null;
+  cacheWeb3Info(initializedAccount);
 
   return success;
 }
