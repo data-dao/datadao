@@ -43,3 +43,9 @@ export const ParticipateRequirement = styled.div`
   margin-top: 10px;
   color: #9090a0;
 `
+
+export const ParticipatePublishing = styled.div`
+  margin: auto;
+  padding-top: 20px;
+  text-align: center;
+`

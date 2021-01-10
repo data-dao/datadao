@@ -1,10 +1,19 @@
-import { DAOMigrationCallbacks, DAOMigrationResult, getNetworkName, getWeb3, migrateDAO } from "@dorgtech/daocreator-lib-experimental"
 import axios from 'axios'
-// comment in Arc1
+import {
+    DAOMigrationResult,
+    getWeb3,
+    DAOMigrationCallbacks,
+    migrateDAO,
+    getNetworkName,
+//   } from "@dorgtech/daocreator-lib";
+  } from "@dorgtech/daocreator-lib-experimental" // comment in Arc1
+import { DDO } from '@oceanprotocol/lib'
 import Notify from "bnc-notify"
-import { HTTP_PROVIDER, NOTIFY_API_KEY } from 'config'
 import ipfsClient from 'ipfs-http-client'
 import Web3 from "web3"
+
+import { HTTP_PROVIDER, NOTIFY_API_KEY } from 'config'
+import IERC20Template from 'contracts/IERC20Template.json'
 
 const notify = Notify({
     dappId: NOTIFY_API_KEY,
@@ -45,6 +54,19 @@ export interface MasterDataTokenMeta {
     owner: string
     templateAddress?: string
     tokenAddress: string
+}
+
+export interface ContributionMeta {
+    contributor: string
+    dataToken: string
+    records: string
+    ddo: DDO
+}
+
+export interface DataTokenOpts {
+    cap?: string
+    name?: string
+    symbol?: string
 }
 
 const getCallbacks = () => {
@@ -170,28 +192,112 @@ export const fetchDataDaos = async (drizzle: any): Promise<Array<MasterDataToken
         }, async (error: any, events: any) => {
             if (error) {
                 reject(error)
-            }        
-            const daos: Array<MasterDataTokenMeta> = await Promise.all(events.map(async (event: any) => {
-                const ipfsMetadata = event.returnValues.ipfsMetadata.replace('ipfs://', 'https://ipfs.infura.io/ipfs/')
-                let rs;
-                try {
-                    rs = await axios.get(ipfsMetadata)
-                } catch(e) {
-                    console.log('Error retrieving metadata from IPFS', e)
-                    reject(e)
-                }
-                return {
-                    daoAddress: event.returnValues.daoAddress,
-                    ipfsMetadata: event.returnValues.ipfsMetadata.replace('ipfs://', 'https://ipfs.infura.io/ipfs/'),
-                    metadata: rs && rs.status === 200 ? rs.data: undefined,
-                    minDatatokenAllowance: event.returnValues.minDatatokenAllowance,
-                    owner: event.returnValues.owner,
-                    // templateAddress: event.returnValues.templateAddress,
-                    tokenAddress: event.returnValues.tokenAddress
-                }
-            }))//.filter((e: any) => e.daoAddress != '0x' + '0'.repeat(40))
+            }  
+            let daos: Array<MasterDataTokenMeta> = []
+            if (events.length) {
+                daos = await Promise.all(events.map(async (event: any) => {
+                    const ipfsMetadata = event.returnValues.ipfsMetadata.replace('ipfs://', 'https://ipfs.infura.io/ipfs/')
+                    let rs;
+                    try {
+                        rs = await axios.get(ipfsMetadata)
+                    } catch(e) {
+                        console.log('Error retrieving metadata from IPFS', e)
+                        reject(e)
+                    }
+                    return {
+                        daoAddress: event.returnValues.daoAddress,
+                        ipfsMetadata: event.returnValues.ipfsMetadata.replace('ipfs://', 'https://ipfs.infura.io/ipfs/'),
+                        metadata: rs && rs.status === 200 ? rs.data: undefined,
+                        minDatatokenAllowance: event.returnValues.minDatatokenAllowance,
+                        owner: event.returnValues.owner,
+                        // templateAddress: event.returnValues.templateAddress,
+                        tokenAddress: event.returnValues.tokenAddress
+                    }
+                }))//.filter((e: any) => e.daoAddress != '0x' + '0'.repeat(40))
+            }
             console.log('DAOS', daos)
             resolve(daos)
         })
+    })
+}
+
+export const fetchContributions = async (masterDataTokenAddr: string, ocean: any, drizzle: any): Promise<Array<ContributionMeta>> => {
+    return new Promise<Array<ContributionMeta>>((resolve, reject) => {
+        const web3  = new Web3(HTTP_PROVIDER);
+        const contract = new web3.eth.Contract(drizzle.contracts.MasterDataToken.abi, masterDataTokenAddr);
+        contract.getPastEvents('ContributionAdded', {
+            fromBlock: 7866667
+        }, async (error: any, events: any) => {
+            if (error) {
+                reject(error)
+            }
+            let contributions: Array<ContributionMeta> = []
+            if (events.length) {
+                contributions = await Promise.all(events.map(async (event: any) => {
+                    const ddo = await ocean.assets.resolveByDTAddress(event.returnValues.dataToken)
+                    return {
+                        contributor: event.returnValues.contributor,
+                        dataToken: event.returnValues.dataToken,
+                        records: event.returnValues.records,
+                        ddo: ddo[0] as DDO
+                    }
+                }))
+            }
+            console.log('Contributions', contributions)
+            resolve(contributions)
+        })
+    })
+}
+
+export const contribute = async (masterDataTokenAddr: string, 
+                                dataTokenAddr: string, 
+                                owner: string,
+                                amountToMint: string,
+                                totalRecords: string,
+                                { drizzle, web3 }: {drizzle: any, web3: any}): Promise<boolean> => {
+    return new Promise<boolean>(async (resolve, reject) => {
+        try {
+            const toMint = web3.utils.toWei(amountToMint)
+            const dataToken = new web3.eth.Contract(IERC20Template.abi, dataTokenAddr)
+            let rs = await dataToken.methods.cap().call()
+            console.log('Cap', rs)
+            rs = await dataToken.methods.balanceOf(owner).call()
+            console.log('balance', rs)
+            rs = await dataToken.methods.minter().call()
+            console.log('minter', rs)
+
+            console.log('PARAMS', masterDataTokenAddr, dataTokenAddr, owner, amountToMint, totalRecords)
+
+            let tx = await dataToken.methods.mint(owner, toMint).send({from: owner}).on('transactionHash', (txHash: string) => {
+                const { emitter } = notify.hash(txHash)
+                // emitter.on('txConfirmed', () => resolve(true))
+                emitter.on('txCancel', () => resolve(false))
+                emitter.on('txFailed', () => resolve(false))
+            })
+            console.log('Mint TX', tx)
+
+            tx = await dataToken.methods.approve(masterDataTokenAddr, toMint).send({from: owner}).on('transactionHash', (txHash: string) => {
+                const { emitter } = notify.hash(txHash)
+                // emitter.on('txConfirmed', () => resolve(true))
+                emitter.on('txCancel', () => resolve(false))
+                emitter.on('txFailed', () => resolve(false))
+            })
+            console.log('Approve TX', tx)
+
+            const masterDataToken = new web3.eth.Contract(drizzle.contracts.MasterDataToken.abi, masterDataTokenAddr)
+            tx = await masterDataToken.methods.contribute(dataTokenAddr, totalRecords).send({from: owner}).on('transactionHash', (txHash: string) => {
+                const { emitter } = notify.hash(txHash)
+                emitter.on('txConfirmed', () => resolve(true))
+                emitter.on('txCancel', () => resolve(false))
+                emitter.on('txFailed', () => resolve(false))
+            })
+            console.log('Contribute TX', tx)
+
+            resolve(true)
+        } catch (e) {
+            console.log('Error at contribute: ', e)
+            reject(e)
+        }
+ 
     })
 }

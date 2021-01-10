@@ -1,11 +1,17 @@
+import { Button as AButton, notification, Result } from 'antd';
 import { MasterDataTokenMeta } from 'helpers/datadao'
-import { DataDao, exampleDataDaos } from 'helpers/exampleDataDaos'
 import * as React from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router'
+import { Link } from 'react-router-dom'
+import { DDO } from '@oceanprotocol/lib'
+import { useOcean, usePublish } from '@oceanprotocol/react'
+import { Metadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/Metadata'
 import { State } from 'reducers'
 
+import { IFile } from 'app/App.components/FilecoinUploader/FilecoinUploader.controller'
 import { ParticipateView } from './Participate.view'
+import { contribute, DataTokenOpts, fetchContributions } from 'helpers/datadao'
 
 type ParticipateProps = {
   drizzle: any
@@ -18,6 +24,115 @@ export const Participate = ({ drizzle, drizzleState }: ParticipateProps) => {
     (dao) => dao.daoAddress === id,
   )[0] as unknown) as MasterDataTokenMeta | undefined
 
+  const { ocean, web3, account } = useOcean()
+  const { publish, publishStep, publishStepText, isLoading } = usePublish()
+  
+  const [ddo, setDdo] = React.useState<DDO | undefined | null>()
+  const [isProcessing, toggleProcess] = React.useState<boolean>(false)
+
+  // const masterDataTokenAddr = '0x2BAb70617b9099A23A900A2D3faF5054366c4e49'
+  const masterDataTokenAddr = dataDao?.tokenAddress
+  React.useEffect(() => {
+    if (ocean && masterDataTokenAddr)
+      fetchContributions(masterDataTokenAddr, ocean, drizzle)
+  },[ocean])
+  
+
+  const publishAsset = async (datasetName: string, 
+                              authorName: string,
+                              license: string,
+                              dataURI: string,
+                              file: IFile,
+                              totalRecords: string,
+                              dataTokenOpts: DataTokenOpts) => {
+
+    let success = false
+    if (masterDataTokenAddr && ocean && web3) {
+      toggleProcess(true)
+      const asset = {
+        main: {
+          type: 'dataset',
+          name: datasetName + new Date().toISOString(),
+          dateCreated: new Date(Date.now()).toISOString().split('.')[0] + 'Z', // remove milliseconds
+          author: authorName,
+          license: license,
+          files: [
+            {
+              url: dataURI,
+              // checksum: 'efb2c764274b745f5fc37f97c6b0e761',
+              contentLength: file ? file.contentLength:'',
+              contentType: file ? file.contentType:'',
+              // encoding: 'UTF-8',
+              // compression: 'zip'
+            }
+          ]
+        }
+      }
+
+      try {
+        const ddo = await publish(asset as Metadata, 'access', dataTokenOpts)
+        console.log('THE DDO ==>', ddo)
+
+        // const dataTokenAddr = '0x452859c5E0d4Dd53Bf95404f45E1D2eD26Bd780a'
+        const dataTokenAddr = ddo!.dataToken
+        const minToMint = '200' // TODO
+
+        success = await contribute(masterDataTokenAddr, dataTokenAddr, account.getId(), minToMint, totalRecords, { drizzle, web3 })
+
+        if (!success) {
+          notification.open({
+            message: 'Process Failed',
+            description: 'Failed to record your contribution',
+          });
+
+        }
+
+        setDdo(ddo)
+      } catch (e) {
+        console.log('ERROR! in Participate', e)
+        notification.open({
+          message: 'Process Failed',
+          description: 'Something wrong happened',
+        });
+      }
+
+      toggleProcess(false)
+    } else {
+      notification.open({
+        message: 'Process Failed',
+        description: 'Cannot connect to your wallet',
+      });
+    }
+  }
+
   if (!dataDao) return <div>DAO not found</div>
-  return <ParticipateView drizzle={drizzle} drizzleState={drizzleState} dataDao={dataDao} />
+
+  let processingMsg = 'Processing...'
+  if (publishStep === 7 && !isLoading) {
+    processingMsg = 'Sending contribution to DAO...'
+  } else if(publishStepText) {
+    processingMsg = publishStepText
+  }
+
+  return ddo && !isProcessing ? (
+    <Result
+      status="success"
+      title="Congratulations!"
+      subTitle="Your contribution has been added to the DataDAO!"
+      extra={[
+        <Link to={`/details/${id}`}>
+          <AButton type="primary" key="console">
+            Return to DataDAO
+          </AButton>
+        </Link>,
+        <a href={`https://market.oceanprotocol.com/asset/${ddo?.id}`} target="_blank">
+          <AButton key="marketplace">
+            View on Ocean Marketplace
+          </AButton>
+        </a>
+      ]}
+    />
+  ):(
+    <ParticipateView dataDao={dataDao} publishAsset={publishAsset} isPublishing={isProcessing} processingMsg={processingMsg} />
+  )
 }

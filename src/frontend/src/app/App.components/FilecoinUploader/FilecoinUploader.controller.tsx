@@ -5,8 +5,16 @@ import { backgroundColorDark, primaryColor, textColor } from 'styles'
 
 import { FilecoinUploaderView } from './FilecoinUploader.view'
 
+export interface IFile {
+  checksum?: string
+  contentLength: string
+  contentType: string
+  encoding?: string
+  compression?: string
+}
+
 type FilecoinUploaderProps = {
-  callback: (url: string) => void
+  callback: (url: string, file: IFile) => void
 }
 
 export const FilecoinUploader = ({ callback }: FilecoinUploaderProps) => {

@@ -1,5 +1,7 @@
 import { DrizzleContext } from '@drizzle/react-plugin'
 import { Drizzle, generateStore } from '@drizzle/store'
+import { ConfigHelper, Logger } from '@oceanprotocol/lib'
+import { OceanProvider } from '@oceanprotocol/react'
 import { ConnectedRouter } from 'connected-react-router'
 import drizzleOpts from 'drizzleOptions'
 import { Browse } from 'pages/Browse/Browse.controller'
@@ -27,6 +29,8 @@ const drizzleStore = generateStore(drizzleOpts)
 // @ts-ignore
 const drizzle = new Drizzle(drizzleOpts, drizzleStore)
 
+const configRinkeby = new ConfigHelper().getConfig('rinkeby')
+
 // Initialize DAOStack & Web3
 initializeArc()
 
@@ -42,6 +46,7 @@ export const App = () => {
           }
 
           return (
+            <OceanProvider initialConfig={configRinkeby}>
             <ConnectedRouter history={history}>
               <Header />
               <Drawer />
@@ -76,6 +81,7 @@ export const App = () => {
               <ProgressBar />
               <LiquidityModal drizzle={drizzle} drizzleState={drizzleState} />
             </ConnectedRouter>
+            </OceanProvider>
           )
         }}
       </DrizzleContext.Consumer>

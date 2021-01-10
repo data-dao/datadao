@@ -4,9 +4,10 @@ import * as React from 'react'
 import Dropzone from 'react-dropzone'
 
 import { FilecoinUploaderStyled, FilecoinUploaderZone } from './FilecoinUploader.style'
+import { IFile  } from './FilecoinUploader.controller'
 
 type FilecoinUploaderViewProps = {
-  callback: (url: string) => void
+  callback: (url: string, file: IFile) => void
 }
 
 export const FilecoinUploaderView = ({ callback }: FilecoinUploaderViewProps) => {
@@ -40,6 +41,10 @@ export const FilecoinUploaderView = ({ callback }: FilecoinUploaderViewProps) =>
 
     callback(
       `https://hub.textile.io/thread/bafksgexwptr5rkchavbhxfahnhvmpbxy5k7yjclfvmbkp4sxcqok77a/buckets/bafzbeib4qr3v42gsfdxsfajjn3dgckbc3vj3mqz5avrui7j4rac7th73xm/${accepted.name}`,
+      {
+        contentLength: accepted.size.toString(),
+        contentType: accepted.type, 
+      }
     )
     // const links = await buckets.links(buck.root.key)
     // console.log(links)
