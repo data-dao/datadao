@@ -19,7 +19,7 @@ export function daos(state = daosDefaultState, action: any): DaosState {
     }
     case UPDATE_DAOS:
       return {
-        daos: action.daos,
+        daos: action.payload,
       }
     default:
       return state

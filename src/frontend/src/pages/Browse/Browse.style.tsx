@@ -2,9 +2,9 @@ import styled from 'styled-components/macro'
 import { backgroundColorLight, FullPage, primaryColor, subTextColor, textColor } from 'styles'
 
 export const BrowseStyled = styled(FullPage)`
-  > h1 {
+  /* > h1 {
     margin: 20px 0 0 0;
-  }
+  } */
 `
 
 export const BrowseDatas = styled.div`

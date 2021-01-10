@@ -5,8 +5,8 @@ import * as React from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Web3 from 'web3'
-import { updateDaos } from './Browse.actions'
 
+import { updateDaos } from './Browse.actions'
 // prettier-ignore
 import { BrowseData, BrowseDataDescription, BrowseDataHeader, BrowseDataHeaderTitle, BrowseDataProgress, BrowseDataProgressBar, BrowseDataProgressBarInner, BrowseDatas, BrowseStyled } from './Browse.style'
 
@@ -25,6 +25,7 @@ export const BrowseView = ({ drizzle }: BrowseViewProps) => {
   React.useEffect(() => {
     fetchDataDaos(drizzle).then((daos: Array<MasterDataTokenMeta>) => {
       listDataDAOS(daos)
+      console.log(daos)
       dispatch(updateDaos(daos))
     })
   }, [drizzle])
@@ -36,7 +37,7 @@ export const BrowseView = ({ drizzle }: BrowseViewProps) => {
         <Button text="Create new Data DAO and request data" />
       </Link>
 
-      <h2>DEMO DAOs</h2>
+      {/* <h2>DEMO DAOs</h2>
       <BrowseDatas>
         {exampleDataDaos.map((dataDao: DataDao) => (
           <Link to={`/details/${dataDao.id}`}>
@@ -58,7 +59,7 @@ export const BrowseView = ({ drizzle }: BrowseViewProps) => {
         ))}
       </BrowseDatas>
 
-      <h2>REAL DAOs</h2>
+      <h2>REAL DAOs</h2> */}
       <BrowseDatas>
         {dataDAOS
           .filter((dataDao: MasterDataTokenMeta) => dataDao.daoAddress != zeroX)
