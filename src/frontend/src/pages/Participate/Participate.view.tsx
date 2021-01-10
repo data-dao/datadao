@@ -1,7 +1,7 @@
 import { Button } from 'app/App.components/Button/Button.controller'
 import { FilecoinUploader } from 'app/App.components/FilecoinUploader/FilecoinUploader.controller'
 import { Input } from 'app/App.components/Input/Input.controller'
-import { DataDao, exampleDataDaos } from 'helpers/exampleDataDaos'
+import { MasterDataTokenMeta } from 'helpers/datadao'
 import { BrowseDataDescription, BrowseDataHeader, BrowseDataHeaderTitle } from 'pages/Browse/Browse.style'
 import * as React from 'react'
 
@@ -11,7 +11,7 @@ import { ParticipateColums, ParticipateMain, ParticipateRequirement, Participate
 type ParticipateViewProps = {
   drizzle: any
   drizzleState: any
-  dataDao: DataDao
+  dataDao: MasterDataTokenMeta
 }
 
 export const ParticipateView = ({ drizzle, drizzleState, dataDao }: ParticipateViewProps) => {
@@ -24,14 +24,15 @@ export const ParticipateView = ({ drizzle, drizzleState, dataDao }: ParticipateV
         <ParticipateRows>
           <div>
             <BrowseDataHeader>
-              <img alt={dataDao.icon} src={`/images/${dataDao.icon}.png`} />
-              <BrowseDataHeaderTitle>{dataDao.name}</BrowseDataHeaderTitle>
+              <img alt="life" src={`/images/life.png`} />
+              <BrowseDataHeaderTitle>{dataDao.metadata?.title}</BrowseDataHeaderTitle>
             </BrowseDataHeader>
-            <BrowseDataDescription>{dataDao.description}</BrowseDataDescription>
+            <BrowseDataDescription>{dataDao.metadata?.description}</BrowseDataDescription>
           </div>
           <div>
             <BrowseDataHeaderTitle>Requirements</BrowseDataHeaderTitle>
-            <ParticipateRequirement>{dataDao.requirement1}</ParticipateRequirement>
+            <ParticipateRequirement>{dataDao.metadata?.customRequirements[0]?.description}</ParticipateRequirement>
+            <ParticipateRequirement>{dataDao.metadata?.customRequirements[1]?.description}</ParticipateRequirement>
           </div>
         </ParticipateRows>
         <ParticipateMain>

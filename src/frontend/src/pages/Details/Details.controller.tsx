@@ -14,7 +14,6 @@ type DetailsProps = {
 
 export const Details = ({ drizzle, drizzleState }: DetailsProps) => {
   let { id } = useParams() as { id: string }
-  //const dataDao: DataDao | undefined = exampleDataDaos.filter((dao: DataDao) => dao.id === id).shift()
 
   const dataDao: MasterDataTokenMeta | undefined = (useSelector((state: State) => state.daos.daos).filter(
     (dao) => dao.daoAddress === id,
