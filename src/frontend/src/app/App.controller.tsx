@@ -29,6 +29,7 @@ const drizzleStore = generateStore(drizzleOpts)
 // @ts-ignore
 const drizzle = new Drizzle(drizzleOpts, drizzleStore)
 
+// OceanProvider config
 const configRinkeby = new ConfigHelper().getConfig('rinkeby')
 
 // Initialize DAOStack & Web3

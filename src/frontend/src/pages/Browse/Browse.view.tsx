@@ -64,7 +64,7 @@ export const BrowseView = ({ drizzle }: BrowseViewProps) => {
         {dataDAOS
           .filter((dataDao: MasterDataTokenMeta) => dataDao.daoAddress != zeroX)
           .map((dataDao: MasterDataTokenMeta) => (
-            <Link to={`/details/${dataDao.daoAddress}`}>
+            <Link to={`/details/${dataDao.daoAddress}`} key={dataDao.daoAddress}>
               <BrowseData key={dataDao.daoAddress}>
                 <BrowseDataHeader>
                   <img alt={'life'} src={`/images/life.png`} />

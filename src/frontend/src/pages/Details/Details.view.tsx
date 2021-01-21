@@ -81,8 +81,8 @@ export const DetailsView = ({ drizzle, drizzleState, dataDao, contributions, myA
           <a href={`https://rinkeby.etherscan.io/address/${dataDao.daoAddress}`} target="_blank">
             DAO address
           </a>
-          <a href={undefined} target="_blank">
-            DataPool Contract (Coming soon)
+          <a href={`https://rinkeby.etherscan.io/address/${dataDao.tokenAddress}`} target="_blank">
+            DataPool Contract
           </a>
 
           <BrowseDataProgress>

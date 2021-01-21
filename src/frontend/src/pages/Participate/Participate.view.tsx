@@ -56,6 +56,7 @@ export const ParticipateView = ({ dataDao, publishAsset, isPublishing, processin
             <BrowseDataHeaderTitle>Requirements</BrowseDataHeaderTitle>
             <ParticipateRequirement>{dataDao.metadata?.customRequirements[0]?.description}</ParticipateRequirement>
             <ParticipateRequirement>{dataDao.metadata?.customRequirements[1]?.description}</ParticipateRequirement>
+            <a href={dataDao.metadata?.sampleData} target="_blank">Download Sample File</a>
           </div>
         </ParticipateRows>
         <ParticipateMain>

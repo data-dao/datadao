@@ -183,13 +183,17 @@ export const createMasterDataToken = async (name: string, symbol: string, daoMet
 
 }
 
-export const fetchDataDaos = async (drizzle: any): Promise<Array<MasterDataTokenMeta>> => {
+export const fetchDataDaos = async (drizzle: any, daoAddress?: string): Promise<Array<MasterDataTokenMeta>> => {
     return new Promise<Array<MasterDataTokenMeta>>((resolve, reject) => {
         const web3  = new Web3(HTTP_PROVIDER);
         const contract = new web3.eth.Contract(drizzle.contracts.MasterDataTokenFactory.abi, drizzle.contracts.MasterDataTokenFactory.address);
-        contract.getPastEvents('MasterDataTokenCreated', {
+        const eventParams: {fromBlock?: number, filter?: any} = {
             fromBlock: 7866667
-        }, async (error: any, events: any) => {
+        }
+        if (daoAddress) {
+            eventParams.filter = { daoAddress }
+        }
+        contract.getPastEvents('MasterDataTokenCreated', eventParams, async (error: any, events: any) => {
             if (error) {
                 reject(error)
             }  
@@ -204,6 +208,11 @@ export const fetchDataDaos = async (drizzle: any): Promise<Array<MasterDataToken
                         console.log('Error retrieving metadata from IPFS', e)
                         reject(e)
                     }
+                    const masterDataTokenAddr = event.returnValues.tokenAddress
+                    const masterDTContract = new web3.eth.Contract(drizzle.contracts.MasterDataToken.abi, masterDataTokenAddr)
+                    const dtName = await masterDTContract.methods.name().call()
+                    const dtSymbol = await masterDTContract.methods.symbol().call()
+                    
                     return {
                         daoAddress: event.returnValues.daoAddress,
                         ipfsMetadata: event.returnValues.ipfsMetadata.replace('ipfs://', 'https://ipfs.infura.io/ipfs/'),
@@ -211,7 +220,11 @@ export const fetchDataDaos = async (drizzle: any): Promise<Array<MasterDataToken
                         minDatatokenAllowance: event.returnValues.minDatatokenAllowance,
                         owner: event.returnValues.owner,
                         // templateAddress: event.returnValues.templateAddress,
-                        tokenAddress: event.returnValues.tokenAddress
+                        tokenAddress: masterDataTokenAddr,
+                        dataTokenMeta: {
+                            name: dtName,
+                            symbol: dtSymbol
+                        }
                     }
                 }))//.filter((e: any) => e.daoAddress != '0x' + '0'.repeat(40))
             }
