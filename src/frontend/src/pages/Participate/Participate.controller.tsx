@@ -4,7 +4,7 @@ import { useOcean, usePublish } from '@oceanprotocol/react'
 import { Button as AButton, notification, Result } from 'antd'
 import { IFile } from 'app/App.components/FilecoinUploader/FilecoinUploader.controller'
 import { MasterDataTokenMeta } from 'helpers/datadao'
-import { contribute, DataTokenOpts, fetchContributions } from 'helpers/datadao'
+import { contribute, DataTokenOpts, fetchDataDaos, fetchContributions } from 'helpers/datadao'
 import * as React from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router'
@@ -20,9 +20,23 @@ type ParticipateProps = {
 
 export const Participate = ({ drizzle, drizzleState }: ParticipateProps) => {
   let { id } = useParams() as { id: string }
-  const dataDao: MasterDataTokenMeta | undefined = (useSelector((state: State) => state.daos.daos).filter(
+  const [dataDao, setDataDao] = React.useState<MasterDataTokenMeta | undefined>()
+
+  const dao: MasterDataTokenMeta | undefined = (useSelector((state: State) => state.daos.daos).filter(
     (dao) => dao.daoAddress === id,
   )[0] as unknown) as MasterDataTokenMeta | undefined
+
+  React.useEffect(() => {
+    if (!dao) { 
+      fetchDataDaos(drizzle, id).then((daos: Array<MasterDataTokenMeta>) => {
+        if (daos.length > 0) {
+          setDataDao(daos[0])
+        }
+      })
+    } else {
+      setDataDao(dao)
+    }
+  }, [dao])
 
   const { ocean, web3, account } = useOcean()
   const { publish, publishStep, publishStepText, isLoading } = usePublish()
@@ -106,9 +120,9 @@ export const Participate = ({ drizzle, drizzleState }: ParticipateProps) => {
     }
   }
 
-  if (!dataDao) return <div>DAO not found</div>
+  if (!dataDao) return <div>Loading...</div>
 
-  let processingMsg = 'Processing...'
+  let processingMsg = 'Preparing contribution...'
   if (publishStep === 7 && !isLoading) {
     processingMsg = 'Sending contribution to DAO...'
   } else if (publishStepText) {

@@ -156,6 +156,14 @@ export const CreateView = ({drizzle, drizzleState}: CreateProps) => {
           onClick={async () => {
             toggleProcess(true)
             let success = false
+            if (!exampleDataUrl) { 
+              notification.open({
+                message: 'Process Failed',
+                description: 'You need to specify an example Data File',
+              });
+              toggleProcess(false)
+              return;
+            }
             if (!getWeb3Provider()) {
               console.log('Connecting to wallet...')
               setMessage('Connecting to wallet...')
