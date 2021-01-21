@@ -11,12 +11,12 @@ const daosDefaultState: DaosState = {
 
 export function daos(state = daosDefaultState, action: any): DaosState {
   switch (action.type) {
-    case RESET: {
-      return daosDefaultState
-    }
-    case RESTORE: {
-      return daosDefaultState
-    }
+    // case RESET: {
+    //   return daosDefaultState
+    // }
+    // case RESTORE: {
+    //   return daosDefaultState
+    // }
     case UPDATE_DAOS:
       return {
         daos: action.payload,

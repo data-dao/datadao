@@ -23,6 +23,7 @@ export const Details = ({ drizzle, drizzleState }: DetailsProps) => {
 
   const masterDataTokenAddr = dataDao?.tokenAddress
   React.useEffect(() => {
+    console.log(ocean, masterDataTokenAddr)
     ;(async function getContribs() {
       if (ocean && masterDataTokenAddr) {
         const contribs = await fetchContributions(masterDataTokenAddr, ocean, drizzle)
@@ -38,7 +39,7 @@ export const Details = ({ drizzle, drizzleState }: DetailsProps) => {
       drizzleState={drizzleState}
       dataDao={dataDao}
       contributions={contributions}
-      myAddress={account.getId()}
+      myAddress={account?.getId()}
     />
   )
 }

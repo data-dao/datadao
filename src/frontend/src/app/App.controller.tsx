@@ -29,7 +29,7 @@ const drizzleStore = generateStore(drizzleOpts)
 // @ts-ignore
 const drizzle = new Drizzle(drizzleOpts, drizzleStore)
 
-const configRinkeby = new ConfigHelper().getConfig('rinkeby')
+const configRinkeby = new ConfigHelper().getConfig('rinkeby', 'e4588d11d73d47749c72f5f542832808')
 
 // Initialize DAOStack & Web3
 initializeArc()
@@ -47,40 +47,40 @@ export const App = () => {
 
           return (
             <OceanProvider initialConfig={configRinkeby}>
-            <ConnectedRouter history={history}>
-              <Header />
-              <Drawer />
-              <Hamburger />
-              <Switch>
-                {/* <Route exact path="/">
+              <ConnectedRouter history={history}>
+                <Header />
+                <Drawer />
+                <Hamburger />
+                <Switch>
+                  {/* <Route exact path="/">
                   <Home />
                 </Route> */}
-                <Route exact path="/get-started">
-                  <GetStarted />
-                </Route>
-                <Route exact path="/create">
-                  <Create drizzle={drizzle} drizzleState={drizzleState} />
-                </Route>
-                <Route exact path="/">
-                  <Browse />
-                </Route>
-                <Route exact path="/details/:id">
-                  <Details drizzle={drizzle} drizzleState={drizzleState} />
-                </Route>
-                <Route exact path="/participate/:id">
-                  <Participate drizzle={drizzle} drizzleState={drizzleState} />
-                </Route>
-                <Route exact path="/congrats">
-                  <Congrats />
-                </Route>
-                <Route>
-                  <Error404 />
-                </Route>
-              </Switch>
-              <Toaster />
-              <ProgressBar />
-              <LiquidityModal drizzle={drizzle} drizzleState={drizzleState} />
-            </ConnectedRouter>
+                  <Route exact path="/get-started">
+                    <GetStarted />
+                  </Route>
+                  <Route exact path="/create">
+                    <Create drizzle={drizzle} drizzleState={drizzleState} />
+                  </Route>
+                  <Route exact path="/">
+                    <Browse />
+                  </Route>
+                  <Route exact path="/details/:id">
+                    <Details drizzle={drizzle} drizzleState={drizzleState} />
+                  </Route>
+                  <Route exact path="/participate/:id">
+                    <Participate drizzle={drizzle} drizzleState={drizzleState} />
+                  </Route>
+                  <Route exact path="/congrats">
+                    <Congrats />
+                  </Route>
+                  <Route>
+                    <Error404 />
+                  </Route>
+                </Switch>
+                <Toaster />
+                <ProgressBar />
+                <LiquidityModal drizzle={drizzle} drizzleState={drizzleState} />
+              </ConnectedRouter>
             </OceanProvider>
           )
         }}
